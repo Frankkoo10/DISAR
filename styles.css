@@ -1,0 +1,50 @@
+/* Animaciones personalizadas para los modales y cart */
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.98); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideLeft {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.2s ease-out forwards;
+}
+
+.animate-slide-left {
+    animation: slideLeft 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Efecto de escala y brillo en hover al estilo "Heavy Drip" */
+.drip-card {
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform, box-shadow;
+}
+
+.drip-card:hover {
+    transform: scale(1.03) translateY(-6px); /* Se hace un 3% más grande y flota hacia arriba */
+    border-color: rgba(255, 255, 255, 0.6);  /* Borde blanco brillante */
+    box-shadow: 0 20px 40px -15px rgba(255, 255, 255, 0.12); /* Sombra de luz */
+    z-index: 10;
+}
+
+/* Scrollbar personalizado oscuro */
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background: #0a0a0a;
+}
+::-webkit-scrollbar-thumb {
+    background: #262626;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #404040;
+}
+.central-logo {
+    height: 210px;      /* Cambia la altura según lo que necesites (ej. 30px, 50px) */
+    width: auto;       /* Mantiene la proporción original de la imagen */
+    object-fit: contain;
+}

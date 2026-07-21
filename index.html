@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TU MARCA | Luxury Streetwear & Drip</title>
+    <!-- Tailwind CSS para diseño rápido y moderno -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Syne & Space Grotesk para estética Drip/Formal -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <!-- Iconos Lucide -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-[#0a0a0a] text-[#f5f5f5] font-['Space_Grotesk'] antialiased selection:bg-white selection:text-black">
+
+    <!-- HEADER / NAVEGACIÓN -->
+    <header class="fixed top-0 left-0 w-full z-40 bg-[#0a0a0a]/90 backdrop-blur-md border-b border-white/10">
+        <!-- Barra superior de anuncios -->
+        <div class="bg-white text-black text-xs font-bold text-center py-1.5 uppercase tracking-widest">
+            Envío gratis en compras superiores a $50.000 | Nuevo Drop Disponible
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Autenticación (Izquierda) -->
+                <div class="flex items-center space-x-4 w-1/3">
+                    <button id="auth-btn" onclick="openModal('auth-modal')" class="text-xs uppercase tracking-widest hover:text-gray-400 transition flex items-center gap-1">
+                        <i data-lucide="user" class="w-4 h-4"></i>
+                        <span id="auth-btn-text">Mi Cuenta</span>
+                    </button>
+                </div>
+
+                <!-- LOGO CENTRAL -->
+               <img src="disar.png" alt="Logo" class="central-logo">
+
+                <!-- Carrito & Redes (Derecha) -->
+                <div class="flex items-center justify-end space-x-6 w-1/3">
+                    <button onclick="toggleCart()" class="relative flex items-center gap-2 text-xs uppercase tracking-widest hover:text-gray-400 transition">
+                        <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                        <span class="hidden sm:inline">Carrito</span>
+                        <span id="cart-count" class="bg-white text-black text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">0</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- NAVEGACIÓN DE PESTAÑAS -->
+            <nav class="flex justify-center space-x-8 py-3 border-t border-white/5 text-xs uppercase tracking-widest font-semibold">
+                <button onclick="switchTab('inicio')" class="nav-link text-white hover:text-gray-400 pb-1 border-b-2 border-white transition">Inicio</button>
+                <button onclick="switchTab('ultimo-drop')" class="nav-link text-gray-400 hover:text-white pb-1 border-b-2 border-transparent transition">Último Drop 🔥</button>
+                
+                <!-- DROPDOWN INDUMENTARIA -->
+                <div class="relative group">
+                    <button onclick="switchTab('indumentaria')" class="nav-link text-gray-400 group-hover:text-white pb-1 border-b-2 border-transparent transition flex items-center gap-1">
+                        Indumentaria <i data-lucide="chevron-down" class="w-3 h-3"></i>
+                    </button>
+                    <!-- Menú desplegable -->
+                    <div class="absolute left-1/2 -translate-x-1/2 mt-2 w-56 bg-[#121212] border border-white/10 shadow-2xl rounded-sm opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 py-2">
+                        <a href="#" onclick="filterCategory('remeras')" class="block px-4 py-2 text-gray-400 hover:bg-white hover:text-black transition">Remeras / Tees</a>
+                        <a href="#" onclick="filterCategory('buzos')" class="block px-4 py-2 text-gray-400 hover:bg-white hover:text-black transition">Buzos / Hoodies</a>
+                        <a href="#" onclick="filterCategory('camperas')" class="block px-4 py-2 text-gray-400 hover:bg-white hover:text-black transition">Camperas / Jackets</a>
+                        <a href="#" onclick="filterCategory('pantalones')" class="block px-4 py-2 text-gray-400 hover:bg-white hover:text-black transition">Pantalones / Cargos</a>
+                        <a href="#" onclick="filterCategory('shorts')" class="block px-4 py-2 text-gray-400 hover:bg-white hover:text-black transition">Shorts</a>
+                        <a href="#" onclick="filterCategory('jeans')" class="block px-4 py-2 text-gray-400 hover:bg-white hover:text-black transition">Jeans Drip</a>
+                        <a href="#" onclick="filterCategory('gorros')" class="block px-4 py-2 text-gray-400 hover:bg-white hover:text-black transition">Gorras & Gorros</a>
+                        <a href="#" onclick="filterCategory('accesorios')" class="block px-4 py-2 text-gray-400 hover:bg-white hover:text-black transition">Accesorios</a>
+                    </div>
+                </div>
+
+                <button onclick="switchTab('zapatillas')" class="nav-link text-gray-400 hover:text-white pb-1 border-b-2 border-transparent transition">Zapatillas / Sneakers</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ESPACIADOR HEADER -->
+    <div class="h-36"></div>
+
+    <!-- CONTENIDO PRINCIPAL (PESTAÑAS) -->
+    <main class="min-h-screen">
+        
+        <!-- PESTAÑA: INICIO -->
+        <section id="tab-inicio" class="tab-content block">
+            <!-- SLIDER HERO -->
+            <div class="relative w-full h-[70vh] bg-[#141414] overflow-hidden">
+                <div id="slider-container" class="w-full h-full relative">
+                    <!-- Slide 1 -->
+                    <div class="slide absolute inset-0 opacity-100 transition-opacity duration-1000 flex items-center justify-center text-center">
+                        <img src="slider1.png.jpeg" class="absolute inset-0 w-full h-full object-cover opacity-40">
+                        <div class="relative z-10 max-w-2xl px-4">
+                            <span class="text-xs font-bold uppercase tracking-[0.3em] bg-white text-black px-3 py-1">Season 2026</span>
+                            <h1 class="font-['Syne'] text-5xl md:text-7xl font-extrabold uppercase mt-4 tracking-tight">HEAVY DRIP COLLECTION</h1>
+                            <p class="text-gray-300 mt-2 text-sm md:text-base">Cortes oversize, calidad premium y diseño exclusivo para destacar en las calles.</p>
+                            <button onclick="switchTab('ultimo-drop')" class="mt-8 bg-white text-black px-8 py-3 text-xs uppercase tracking-widest font-bold hover:bg-gray-200 transition">Ver Drop</button>
+                        </div>
+                    </div>
+                    <!-- Slide 2 -->
+                    <div class="slide absolute inset-0 opacity-0 transition-opacity duration-1000 flex items-center justify-center text-center">
+                        <img src="slider2.png.jpeg" class="absolute inset-0 w-full h-full object-cover opacity-40">
+                        <div class="relative z-10 max-w-2xl px-4">
+                            <span class="text-xs font-bold uppercase tracking-[0.3em] bg-white text-black px-3 py-1">Footwear Exclusive</span>
+                            <h1 class="font-['Syne'] text-5xl md:text-7xl font-extrabold uppercase mt-4 tracking-tight">SNEAKERS VAULT</h1>
+                            <p class="text-gray-300 mt-2 text-sm md:text-base">La mejor selección de calzado para completar tu outfit formal drip.</p>
+                            <button onclick="switchTab('zapatillas')" class="mt-8 bg-white text-black px-8 py-3 text-xs uppercase tracking-widest font-bold hover:bg-gray-200 transition">Explorar Zapatillas</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Controles Slider -->
+                <button onclick="prevSlide()" class="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 p-3 rounded-full border border-white/10 hover:bg-black"><i data-lucide="chevron-left"></i></button>
+                <button onclick="nextSlide()" class="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 p-3 rounded-full border border-white/10 hover:bg-black"><i data-lucide="chevron-right"></i></button>
+            </div>
+
+            <!-- SECCIÓN POPULARES -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+                <div class="flex justify-between items-end mb-10 border-b border-white/10 pb-4">
+                    <div>
+                        <h2 class="font-['Syne'] text-3xl font-extrabold uppercase tracking-tight">Más Populares</h2>
+                        <p class="text-gray-400 text-xs uppercase tracking-widest mt-1">Las prendas más codiciadas de la tienda</p>
+                    </div>
+                    <button onclick="switchTab('indumentaria')" class="text-xs uppercase tracking-widest hover:text-gray-400 transition underline">Ver todo el catálogo ->></button>
+                </div>
+                
+                <!-- Grilla de Productos Populares -->
+                <div id="grid-populares" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+                    <!-- Cargado por JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- PESTAÑA: ÚLTIMO DROP -->
+        <section id="tab-ultimo-drop" class="tab-content hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="text-center mb-12">
+                <span class="text-xs font-bold uppercase tracking-[0.3em] text-red-500">New Release</span>
+                <h2 class="font-['Syne'] text-4xl md:text-5xl font-extrabold uppercase mt-1">ÚLTIMO DROP 🔥</h2>
+                <p class="text-gray-400 text-sm mt-2">Unidades limitadas. Sin restock una vez agotado.</p>
+            </div>
+            <div id="grid-ultimo-drop" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8"></div>
+        </section>
+
+        <!-- PESTAÑA: INDUMENTARIA -->
+        <section id="tab-indumentaria" class="tab-content hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 border-b border-white/10 pb-6 gap-4">
+                <div>
+                    <h2 id="indumentaria-title" class="font-['Syne'] text-4xl font-extrabold uppercase">Toda la Indumentaria</h2>
+                    <p class="text-gray-400 text-xs uppercase tracking-widest mt-1">Streetwear de alta gama</p>
+                </div>
+                <!-- Filtros rápidos por botones -->
+                <div class="flex flex-wrap gap-2 text-xs">
+                    <button onclick="filterCategory('all')" class="px-3 py-1.5 border border-white/20 hover:bg-white hover:text-black transition">Todos</button>
+                    <button onclick="filterCategory('remeras')" class="px-3 py-1.5 border border-white/20 hover:bg-white hover:text-black transition">Remeras</button>
+                    <button onclick="filterCategory('buzos')" class="px-3 py-1.5 border border-white/20 hover:bg-white hover:text-black transition">Buzos</button>
+                    <button onclick="filterCategory('pantalones')" class="px-3 py-1.5 border border-white/20 hover:bg-white hover:text-black transition">Pantalones</button>
+                    <button onclick="filterCategory('shorts')" class="px-3 py-1.5 border border-white/20 hover:bg-white hover:text-black transition">Shorts</button>
+                    <button onclick="filterCategory('gorros')" class="px-3 py-1.5 border border-white/20 hover:bg-white hover:text-black transition">Gorras</button>
+                </div>
+            </div>
+            <div id="grid-indumentaria" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8"></div>
+        </section>
+
+        <!-- PESTAÑA: ZAPATILLAS -->
+        <section id="tab-zapatillas" class="tab-content hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="text-center mb-12">
+                <h2 class="font-['Syne'] text-4xl md:text-5xl font-extrabold uppercase">Zapatillas & Sneakers</h2>
+                <p class="text-gray-400 text-sm mt-2">El calzado perfecto para tu rotación diaria.</p>
+            </div>
+            <div id="grid-zapatillas" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8"></div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER (Presente en todas las pestañas) -->
+    <footer class="bg-[#050505] border-t border-white/10 py-16 mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="text-center md:text-left">
+                <img src="disar.png" alt="Logo" class="central-logo">
+                <p class="text-gray-500 text-xs mt-1">Luxury Streetwear & Heavy Drip Designed for the Culture.</p>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row items-center gap-8 text-sm">
+                <!-- Redirigir a IG -->
+                <a href="https://instagram.com/tu_usuario_de_ig" target="_blank" class="flex items-center gap-2 text-white hover:text-gray-400 transition bg-white/5 px-6 py-3 rounded-full border border-white/10">
+                    <i data-lucide="instagram" class="w-5 h-5 text-pink-500"></i>
+                    <span class="font-semibold uppercase tracking-wider text-xs">Seguinos en Instagram</span>
+                </a>
+                <!-- Correo de Contacto -->
+                <a href="mailto:contacto@tumarca.com" class="flex items-center gap-2 text-gray-400 hover:text-white transition">
+                    <i data-lucide="mail" class="w-5 h-5"></i>
+                    <span>contacto@tumarca.com</span>
+                </a>
+            </div>
+        </div>
+        <div class="text-center text-gray-600 text-[10px] uppercase tracking-widest mt-12 border-t border-white/5 pt-8">
+            &copy; 2026 DISAR. Todos los derechos reservados. Powered by Supabase.
+        </div>
+    </footer>
+
+    <!-- MODAL DE DETALLE DE PRODUCTO (Color, Talles, Descripción y Stock) -->
+    <div id="product-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-4">
+        <div class="bg-[#121212] border border-white/20 max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 relative rounded-sm overflow-hidden shadow-2xl animate-fade-in">
+            <button onclick="closeModal('product-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-white z-10 bg-black/60 p-2 rounded-full border border-white/10"><i data-lucide="x"></i></button>
+            
+            <!-- Imagen del producto -->
+            <div class="bg-black flex items-center justify-center p-6 border-b md:border-b-0 md:border-r border-white/10">
+                <img id="modal-img" src="" alt="" class="max-h-[420px] w-auto object-cover hover:scale-105 transition duration-500">
+            </div>
+            
+            <!-- Información, Colores y Talles -->
+            <div class="p-8 flex flex-col justify-between max-h-[85vh] overflow-y-auto">
+                <div>
+                    <span id="modal-category" class="text-[10px] uppercase tracking-[0.2em] bg-white/10 text-gray-300 px-2 py-1 font-bold"></span>
+                    <h3 id="modal-title" class="font-['Syne'] text-2xl md:text-3xl font-extrabold uppercase mt-3 text-white leading-none"></h3>
+                    <p id="modal-price" class="text-2xl font-bold mt-2 text-white font-['Space_Grotesk']"></p>
+                    
+                    <!-- Descripción del producto -->
+                    <div class="mt-4 bg-black/50 p-4 border border-white/5 rounded-sm">
+                        <span class="text-[10px] uppercase tracking-widest text-gray-400 block font-bold mb-1">Descripción:</span>
+                        <p id="modal-desc" class="text-gray-300 text-xs md:text-sm leading-relaxed"></p>
+                    </div>
+
+                    <!-- 1. SELECTOR DE COLORES -->
+                    <div class="mt-6">
+                        <span class="text-xs uppercase tracking-widest text-gray-400 block mb-2 font-bold">1. Elegí el Color: <span id="selected-color-name" class="text-white font-normal"></span></span>
+                        <div id="modal-colors" class="flex flex-wrap gap-3">
+                            <!-- Se inyecta por JS -->
+                        </div>
+                    </div>
+
+                    <!-- 2. SELECTOR DE TALLES (Se actualiza al elegir color) -->
+                    <div class="mt-6">
+                        <div class="flex justify-between text-xs uppercase tracking-widest mb-2 font-bold">
+                            <span class="text-gray-400">2. Elegí el Talle:</span>
+                            <span id="modal-stock-status" class="text-gray-500 text-[11px]">Seleccioná un color primero</span>
+                        </div>
+                        <div id="modal-sizes" class="flex flex-wrap gap-2">
+                            <!-- Se inyecta por JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <button id="modal-add-btn" class="w-full mt-8 bg-white text-black py-4 uppercase font-extrabold text-xs tracking-[0.2em] hover:bg-gray-200 transition flex justify-center items-center gap-2 shadow-lg">
+                    <i data-lucide="shopping-bag" class="w-4 h-4"></i> Seleccioná Color y Talle
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CARTO DRAWER (SLIDE-OVER DESDE LA DERECHA) -->
+    <div id="cart-drawer" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden justify-end">
+        <div class="bg-[#121212] w-full max-w-md h-full border-l border-white/10 flex flex-col justify-between p-6 shadow-2xl animate-slide-left">
+            <div>
+                <div class="flex justify-between items-center border-b border-white/10 pb-4">
+                    <h3 class="font-['Syne'] text-xl font-bold uppercase tracking-tight flex items-center gap-2">
+                        <i data-lucide="shopping-bag"></i> Tu Carrito Drip
+                    </h3>
+                    <button onclick="toggleCart()" class="text-gray-400 hover:text-white"><i data-lucide="x"></i></button>
+                </div>
+                <!-- Lista del Carrito -->
+                <div id="cart-items-container" class="py-6 space-y-4 max-h-[60vh] overflow-y-auto pr-2">
+                    <!-- Se llena por JS -->
+                </div>
+            </div>
+            
+            <div class="border-t border-white/10 pt-4">
+                <div class="flex justify-between text-base font-bold uppercase mb-4">
+                    <span>Total:</span>
+                    <span id="cart-total">$0</span>
+                </div>
+                <button onclick="checkout()" class="w-full bg-white text-black py-4 uppercase font-bold text-xs tracking-widest hover:bg-gray-200 transition">
+                    Finalizar Compra / Ir a Pagar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE AUTENTICACIÓN (LOGIN / REGISTRO / CONTRASEÑA) -->
+    <div id="auth-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4">
+        <div class="bg-[#121212] border border-white/10 max-w-md w-full p-8 relative rounded-sm shadow-2xl">
+            <button onclick="closeModal('auth-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i data-lucide="x"></i></button>
+            
+            <h3 id="auth-title" class="font-['Syne'] text-2xl font-extrabold uppercase text-center mb-6">Iniciar Sesión</h3>
+            
+            <form id="auth-form" onsubmit="handleAuth(event)" class="space-y-4">
+                <div>
+                    <label class="text-xs uppercase tracking-widest text-gray-400 block mb-1">Correo Electrónico</label>
+                    <input type="email" id="auth-email" required class="w-full bg-black border border-white/20 p-3 text-sm focus:outline-none focus:border-white transition text-white">
+                </div>
+                <div id="password-field">
+                    <label class="text-xs uppercase tracking-widest text-gray-400 block mb-1">Contraseña</label>
+                    <input type="password" id="auth-pass" class="w-full bg-black border border-white/20 p-3 text-sm focus:outline-none focus:border-white transition text-white">
+                </div>
+                
+                <button type="submit" id="auth-submit-btn" class="w-full bg-white text-black py-3.5 uppercase font-bold text-xs tracking-widest hover:bg-gray-200 transition mt-2">
+                    Ingresar
+                </button>
+            </form>
+
+            <!-- Alternadores de vistas (Login / Registro / Reset) -->
+            <div class="mt-6 text-center text-xs space-y-2 border-t border-white/10 pt-4 text-gray-400">
+                <p id="toggle-auth-text">¿No tenés cuenta? <a href="#" onclick="toggleAuthMode('register')" class="text-white underline font-bold">Registrate acá</a></p>
+                <p><a href="#" onclick="toggleAuthMode('reset')" class="hover:text-white transition">¿Olvidaste tu contraseña?</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>
