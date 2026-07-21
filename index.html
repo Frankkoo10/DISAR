@@ -50,8 +50,8 @@
                 </div>
             </div>
 
-            <!-- NAVEGACIÓN DE PESTAÑAS (Scroll horizontal suave sin scrollbar en celular) -->
-            <nav class="flex justify-start md:justify-center space-x-5 md:space-x-8 py-3 border-t border-white/5 text-xs uppercase tracking-widest font-semibold overflow-x-auto no-scrollbar whitespace-nowrap px-2 md:px-0">
+            <!-- NAVEGACIÓN DE PESTAÑAS (Agregado md:overflow-visible para evitar que se corte el menú) -->
+            <nav class="flex justify-start md:justify-center space-x-5 md:space-x-8 py-3 border-t border-white/5 text-xs uppercase tracking-widest font-semibold overflow-x-auto md:overflow-visible no-scrollbar whitespace-nowrap px-2 md:px-0">
                 <button onclick="switchTab('inicio')" class="nav-link text-white hover:text-gray-400 pb-1 border-b-2 border-white transition flex-shrink-0">Inicio</button>
                 <button onclick="switchTab('ultimo-drop')" class="nav-link text-gray-400 hover:text-white pb-1 border-b-2 border-transparent transition flex-shrink-0">Último Drop 🔥</button>
                 
@@ -60,8 +60,8 @@
                     <button onclick="switchTab('indumentaria')" class="nav-link text-gray-400 group-hover:text-white pb-1 border-b-2 border-transparent transition flex items-center gap-1">
                         Indumentaria <i data-lucide="chevron-down" class="w-3 h-3"></i>
                     </button>
-                    <!-- Menú desplegable -->
-                    <div class="absolute left-0 md:left-1/2 md:-translate-x-1/2 mt-2 w-56 bg-[#121212] border border-white/10 shadow-2xl rounded-sm opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 py-2">
+                    <!-- Menú desplegable (Ajustado con top-full y mt-1 para un hover continuo sin cortes) -->
+                    <div class="absolute left-0 md:left-1/2 md:-translate-x-1/2 top-full mt-1 w-56 bg-[#121212] border border-white/10 shadow-2xl rounded-sm opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 py-2">
                         <a href="#" onclick="filterCategory('remeras')" class="block px-4 py-2 text-gray-400 hover:bg-white hover:text-black transition">Remeras / Tees</a>
                         <a href="#" onclick="filterCategory('buzos')" class="block px-4 py-2 text-gray-400 hover:bg-white hover:text-black transition">Buzos / Hoodies</a>
                         <a href="#" onclick="filterCategory('camperas')" class="block px-4 py-2 text-gray-400 hover:bg-white hover:text-black transition">Camperas / Jackets</a>
